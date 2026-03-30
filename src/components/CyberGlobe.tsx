@@ -201,6 +201,7 @@ export default function CyberGlobe({ attacks, onAttackComplete }: CyberGlobeProp
 
         <GlobeBody />
         <GlobeGrid />
+        <ContinentLines />
 
         {attacks.map((a) => (
           <ArcLine key={a.id} attack={a} onComplete={() => onAttackComplete(a.id)} />
