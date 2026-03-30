@@ -3,7 +3,7 @@ import profileImg from "@/assets/profile.png";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-grid overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-grid overflow-hidden pt-20">
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background pointer-events-none" />
       
