@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sphere, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { AttackEvent, threatColors } from "@/data/attackData";
+import { continentOutlines } from "@/data/continents";
 
 function latLngToVector3(lat: number, lng: number, radius: number): THREE.Vector3 {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -111,6 +112,41 @@ function PingEffect({ color }: { color: string }) {
   );
 }
 
+function ContinentLines() {
+  const groupRef = useRef<THREE.Group>(null);
+
+  const lines = useMemo(() => {
+    return continentOutlines.map((outline) => {
+      const pts = outline.map(([lat, lng]) => latLngToVector3(lat, lng, 2.012));
+      return new Float32Array(pts.flatMap((p) => [p.x, p.y, p.z]));
+    });
+  }, []);
+
+  useFrame((_, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.05;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {lines.map((arr, i) => (
+        <line key={i}>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              count={arr.length / 3}
+              array={arr}
+              itemSize={3}
+            />
+          </bufferGeometry>
+          <lineBasicMaterial color="#0088ff" transparent opacity={0.6} />
+        </line>
+      ))}
+    </group>
+  );
+}
+
 function GlobeBody() {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -144,10 +180,7 @@ function GlobeGrid() {
   return (
     <group ref={gridRef}>
       <Sphere args={[2.005, 36, 36]}>
-        <meshBasicMaterial color="#0066ff" wireframe transparent opacity={0.08} />
-      </Sphere>
-      <Sphere args={[2.008, 18, 18]}>
-        <meshBasicMaterial color="#0088ff" wireframe transparent opacity={0.15} />
+        <meshBasicMaterial color="#0066ff" wireframe transparent opacity={0.06} />
       </Sphere>
     </group>
   );
@@ -168,6 +201,7 @@ export default function CyberGlobe({ attacks, onAttackComplete }: CyberGlobeProp
 
         <GlobeBody />
         <GlobeGrid />
+        <ContinentLines />
 
         {attacks.map((a) => (
           <ArcLine key={a.id} attack={a} onComplete={() => onAttackComplete(a.id)} />
