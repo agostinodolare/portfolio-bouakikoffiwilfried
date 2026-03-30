@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Shield, Menu, X } from "lucide-react";
 
 const links = [
+  { href: "#dashboard", label: "Dashboard" },
   { href: "#competences", label: "Compétences" },
   { href: "#projets", label: "Projets" },
   { href: "#certifications", label: "Certifications" },
+  { href: "#formation", label: "Formation" },
   { href: "#contact", label: "Contact" },
 ];
 
