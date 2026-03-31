@@ -78,8 +78,16 @@ export default function CyberDashboard() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="overflow-y-auto max-h-[400px]">
+              <div className="overflow-y-auto max-h-[300px]">
                 <AttackLog attacks={attacks} />
+              </div>
+              <div className="mt-3 pt-3 border-t border-border">
+                <AttackCounters
+                  total={stats.total}
+                  critical={stats.critical}
+                  blocked={stats.blocked}
+                  active={activeArcs.length}
+                />
               </div>
             </div>
           )}
