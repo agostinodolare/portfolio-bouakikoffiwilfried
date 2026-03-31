@@ -5,6 +5,7 @@ import ProjectsSection from "@/components/ProjectsSection";
 import CertificationsSection from "@/components/CertificationsSection";
 import CyberDashboard from "@/components/CyberDashboard";
 import EducationSection from "@/components/EducationSection";
+import AttackCounters from "@/components/AttackCounters";
 import Footer from "@/components/Footer";
 
 const Index = () => (

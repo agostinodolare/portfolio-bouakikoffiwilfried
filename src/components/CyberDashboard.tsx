@@ -81,14 +81,6 @@ export default function CyberDashboard() {
               <div className="overflow-y-auto max-h-[300px]">
                 <AttackLog attacks={attacks} />
               </div>
-              <div className="mt-3 pt-3 border-t border-border">
-                <AttackCounters
-                  total={stats.total}
-                  critical={stats.critical}
-                  blocked={stats.blocked}
-                  active={activeArcs.length}
-                />
-              </div>
             </div>
           )}
 
@@ -101,6 +93,16 @@ export default function CyberDashboard() {
           >
             <CyberGlobe attacks={activeArcs} onAttackComplete={handleArcComplete} />
           </Suspense>
+        </div>
+
+        {/* Counters below globe */}
+        <div className="mt-6 max-w-3xl mx-auto">
+          <AttackCounters
+            total={stats.total}
+            critical={stats.critical}
+            blocked={stats.blocked}
+            active={activeArcs.length}
+          />
         </div>
       </div>
     </section>
