@@ -47,16 +47,6 @@ export default function CyberDashboard() {
           Surveillance en temps réel des menaces mondiales
         </p>
 
-        {/* Counters row */}
-        <div className="max-w-2xl mx-auto mb-4">
-          <AttackCounters
-            total={stats.total}
-            critical={stats.critical}
-            blocked={stats.blocked}
-            active={activeArcs.length}
-          />
-        </div>
-
         {/* Globe - full width */}
         <div className="relative h-[500px] md:h-[600px] rounded-xl border border-border bg-card/30 overflow-hidden">
           <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
@@ -88,8 +78,16 @@ export default function CyberDashboard() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <div className="overflow-y-auto max-h-[400px]">
+              <div className="overflow-y-auto max-h-[300px]">
                 <AttackLog attacks={attacks} />
+              </div>
+              <div className="mt-3 pt-3 border-t border-border">
+                <AttackCounters
+                  total={stats.total}
+                  critical={stats.critical}
+                  blocked={stats.blocked}
+                  active={activeArcs.length}
+                />
               </div>
             </div>
           )}
