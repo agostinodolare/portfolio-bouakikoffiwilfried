@@ -94,6 +94,16 @@ export default function CyberDashboard() {
             <CyberGlobe attacks={activeArcs} onAttackComplete={handleArcComplete} />
           </Suspense>
         </div>
+
+        {/* Counters below globe */}
+        <div className="mt-6 max-w-3xl mx-auto">
+          <AttackCounters
+            total={stats.total}
+            critical={stats.critical}
+            blocked={stats.blocked}
+            active={activeArcs.length}
+          />
+        </div>
       </div>
     </section>
   );
