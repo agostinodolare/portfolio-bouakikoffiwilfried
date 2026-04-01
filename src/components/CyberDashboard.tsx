@@ -4,6 +4,7 @@ import CyberGlobe from "./CyberGlobe";
 import AttackLog from "./AttackLog";
 import AttackCounters from "./AttackCounters";
 import { Activity, X } from "lucide-react";
+import AsciiCurl from "./AsciiCurl";
 
 export default function CyberDashboard() {
   const [attacks, setAttacks] = useState<AttackEvent[]>([]);
@@ -49,6 +50,7 @@ export default function CyberDashboard() {
 
         {/* Globe - full width */}
         <div className="relative h-[500px] md:h-[600px] rounded-xl border border-border bg-card/30 overflow-hidden">
+          <AsciiCurl />
           <div className="absolute top-3 left-3 z-10 flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-border">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <span className="font-mono text-xs text-primary">LIVE</span>
