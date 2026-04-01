@@ -4,6 +4,7 @@ import CyberGlobe from "./CyberGlobe";
 import AttackLog from "./AttackLog";
 import AttackCounters from "./AttackCounters";
 import { Activity, X } from "lucide-react";
+import AsciiCurl from "./AsciiCurl";
 
 export default function CyberDashboard() {
   const [attacks, setAttacks] = useState<AttackEvent[]>([]);
