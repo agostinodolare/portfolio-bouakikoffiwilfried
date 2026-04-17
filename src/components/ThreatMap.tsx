@@ -56,7 +56,6 @@ function AttackArc({ attack, onComplete }: { attack: AttackEvent; onComplete: ()
             begin="1s"
             repeatCount="1"
             fill="freeze"
-            onEnd={onComplete}
           />
           <animate
             attributeName="opacity"
