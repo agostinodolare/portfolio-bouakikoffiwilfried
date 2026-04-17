@@ -91,6 +91,7 @@ export default function ThreatMap({ attacks, onAttackComplete }: ThreatMapProps)
     coordinates: [0, 25],
     zoom: 1,
   });
+  const [tooltip, setTooltip] = useState<{ name: string; x: number; y: number } | null>(null);
 
   const handleZoomIn = () => {
     if (position.zoom >= 8) return;
@@ -103,7 +104,14 @@ export default function ThreatMap({ attacks, onAttackComplete }: ThreatMapProps)
   const handleReset = () => setPosition({ coordinates: [0, 25], zoom: 1 });
 
   return (
-    <div className="w-full h-full relative bg-[#03060d]">
+    <div
+      className="w-full h-full relative bg-[#03060d]"
+      onMouseMove={(e) => {
+        if (!tooltip) return;
+        const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+        setTooltip((t) => (t ? { ...t, x: e.clientX - rect.left, y: e.clientY - rect.top } : t));
+      }}
+    >
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{ scale: 130 }}
@@ -118,20 +126,40 @@ export default function ThreatMap({ attacks, onAttackComplete }: ThreatMapProps)
         >
           <Geographies geography={GEO_URL}>
             {({ geographies }) =>
-              geographies.map((geo) => (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill="hsl(217 33% 8%)"
-                  stroke="hsl(199 89% 48% / 0.4)"
-                  strokeWidth={0.4}
-                  style={{
-                    default: { outline: "none" },
-                    hover: { fill: "hsl(217 33% 12%)", outline: "none" },
-                    pressed: { outline: "none" },
-                  }}
-                />
-              ))
+              geographies.map((geo) => {
+                const name = geo.properties?.name ?? "Inconnu";
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    onMouseEnter={(e) => {
+                      const rect = (e.currentTarget.ownerSVGElement?.parentElement as HTMLElement)?.getBoundingClientRect();
+                      setTooltip({
+                        name,
+                        x: rect ? e.clientX - rect.left : 0,
+                        y: rect ? e.clientY - rect.top : 0,
+                      });
+                    }}
+                    onMouseLeave={() => setTooltip(null)}
+                    onClick={(e) => {
+                      const rect = (e.currentTarget.ownerSVGElement?.parentElement as HTMLElement)?.getBoundingClientRect();
+                      setTooltip({
+                        name,
+                        x: rect ? e.clientX - rect.left : 0,
+                        y: rect ? e.clientY - rect.top : 0,
+                      });
+                    }}
+                    fill="hsl(217 33% 8%)"
+                    stroke="hsl(199 89% 48% / 0.4)"
+                    strokeWidth={0.4}
+                    style={{
+                      default: { outline: "none" },
+                      hover: { fill: "hsl(199 89% 48% / 0.3)", outline: "none", cursor: "pointer" },
+                      pressed: { fill: "hsl(199 89% 48% / 0.5)", outline: "none" },
+                    }}
+                  />
+                );
+              })
             }
           </Geographies>
 
@@ -140,6 +168,19 @@ export default function ThreatMap({ attacks, onAttackComplete }: ThreatMapProps)
           ))}
         </ZoomableGroup>
       </ComposableMap>
+
+      {/* Country tooltip */}
+      {tooltip && (
+        <div
+          className="pointer-events-none absolute z-20 px-2.5 py-1 rounded-md bg-background/95 backdrop-blur-sm border border-primary/40 text-primary font-mono text-xs shadow-[0_0_15px_hsl(199_89%_48%/0.3)] whitespace-nowrap"
+          style={{
+            left: tooltip.x + 12,
+            top: tooltip.y + 12,
+          }}
+        >
+          {tooltip.name}
+        </div>
+      )}
 
       {/* Zoom controls */}
       <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
