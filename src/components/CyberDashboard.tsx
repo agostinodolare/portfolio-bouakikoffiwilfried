@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { generateAttack, AttackEvent } from "@/data/attackData";
-import CyberGlobe from "./CyberGlobe";
+import ThreatMap from "./ThreatMap";
 import AttackLog from "./AttackLog";
 import AttackCounters from "./AttackCounters";
 import { Activity, X } from "lucide-react";
@@ -89,11 +89,11 @@ export default function CyberDashboard() {
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center">
-                <span className="font-mono text-sm text-muted-foreground animate-pulse">Loading Globe...</span>
+                <span className="font-mono text-sm text-muted-foreground animate-pulse">Loading Threat Map...</span>
               </div>
             }
           >
-            <CyberGlobe attacks={activeArcs} onAttackComplete={handleArcComplete} />
+            <ThreatMap attacks={activeArcs} onAttackComplete={handleArcComplete} />
           </Suspense>
         </div>
 
