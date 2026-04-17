@@ -1,5 +1,7 @@
 import { useMemo } from "react";
-import { ComposableMap, Geographies, Geography, Line, Marker } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, Line, Marker, ZoomableGroup } from "react-simple-maps";
+import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { useState } from "react";
 import { AttackEvent, threatColors } from "@/data/attackData";
 
 // Public TopoJSON world map (low-res, fast)
@@ -85,36 +87,84 @@ export default function ThreatMap({ attacks, onAttackComplete }: ThreatMapProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attacks.length]);
 
+  const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
+    coordinates: [0, 25],
+    zoom: 1,
+  });
+
+  const handleZoomIn = () => {
+    if (position.zoom >= 8) return;
+    setPosition((p) => ({ ...p, zoom: p.zoom * 1.5 }));
+  };
+  const handleZoomOut = () => {
+    if (position.zoom <= 1) return;
+    setPosition((p) => ({ ...p, zoom: p.zoom / 1.5 }));
+  };
+  const handleReset = () => setPosition({ coordinates: [0, 25], zoom: 1 });
+
   return (
     <div className="w-full h-full relative bg-[#03060d]">
       <ComposableMap
         projection="geoMercator"
-        projectionConfig={{ scale: 130, center: [0, 25] }}
+        projectionConfig={{ scale: 130 }}
         style={{ width: "100%", height: "100%" }}
       >
-        <Geographies geography={GEO_URL}>
-          {({ geographies }) =>
-            geographies.map((geo) => (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill="hsl(217 33% 8%)"
-                stroke="hsl(199 89% 48% / 0.4)"
-                strokeWidth={0.4}
-                style={{
-                  default: { outline: "none" },
-                  hover: { fill: "hsl(217 33% 12%)", outline: "none" },
-                  pressed: { outline: "none" },
-                }}
-              />
-            ))
-          }
-        </Geographies>
+        <ZoomableGroup
+          zoom={position.zoom}
+          center={position.coordinates}
+          onMoveEnd={(pos) => setPosition({ coordinates: pos.coordinates as [number, number], zoom: pos.zoom })}
+          maxZoom={8}
+          minZoom={1}
+        >
+          <Geographies geography={GEO_URL}>
+            {({ geographies }) =>
+              geographies.map((geo) => (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill="hsl(217 33% 8%)"
+                  stroke="hsl(199 89% 48% / 0.4)"
+                  strokeWidth={0.4}
+                  style={{
+                    default: { outline: "none" },
+                    hover: { fill: "hsl(217 33% 12%)", outline: "none" },
+                    pressed: { outline: "none" },
+                  }}
+                />
+              ))
+            }
+          </Geographies>
 
-        {attacks.map((a) => (
-          <AttackArc key={a.id} attack={a} onComplete={() => onAttackComplete(a.id)} />
-        ))}
+          {attacks.map((a) => (
+            <AttackArc key={a.id} attack={a} onComplete={() => onAttackComplete(a.id)} />
+          ))}
+        </ZoomableGroup>
       </ComposableMap>
+
+      {/* Zoom controls */}
+      <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
+        <button
+          onClick={handleZoomIn}
+          aria-label="Zoom avant"
+          className="w-8 h-8 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md border border-border hover:border-primary/50 hover:text-primary transition-colors"
+        >
+          <ZoomIn className="w-4 h-4" />
+        </button>
+        <button
+          onClick={handleZoomOut}
+          aria-label="Zoom arrière"
+          className="w-8 h-8 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md border border-border hover:border-primary/50 hover:text-primary transition-colors"
+        >
+          <ZoomOut className="w-4 h-4" />
+        </button>
+        <button
+          onClick={handleReset}
+          aria-label="Réinitialiser"
+          className="w-8 h-8 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-md border border-border hover:border-primary/50 hover:text-primary transition-colors"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+      </div>
 
       {/* Subtle scanline overlay */}
       <div

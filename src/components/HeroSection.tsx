@@ -1,4 +1,4 @@
-import { Shield, Terminal, ChevronDown } from "lucide-react";
+import { Shield, Terminal, ChevronDown, Download } from "lucide-react";
 import profileImg from "@/assets/profile.png";
 import MatrixRain from "./MatrixRain";
 
@@ -57,6 +57,16 @@ const HeroSection = () => {
             </span>
           ))}
         </div>
+
+        {/* Download CV button */}
+        <a
+          href="/CV_Bouaki_Koffi_Wilfried.pdf"
+          download
+          className="mt-2 inline-flex items-center gap-2 px-6 py-2.5 rounded-md border border-primary/40 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all font-mono text-sm tracking-wider shadow-[0_0_20px_hsl(130_100%_50%/0.2)]"
+        >
+          <Download className="w-4 h-4" />
+          Télécharger CV
+        </a>
 
         {/* Contact links */}
         <div className="flex gap-6 mt-4 text-muted-foreground text-sm font-mono">
